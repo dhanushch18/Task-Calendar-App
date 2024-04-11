@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Calendar Model</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: rgb(169, 166, 166);
+    }
+    .day {
+      border: 1px solid #ccc;
+      height: 200px; /* Increased height */
+      width: 200px; /* Increased width */
+    }
+    .weekday {
+      background-color: #d6e7ce;
+    }
+    .weekend {
+      background-color: #ea120b; /* LightSalmon */
+    }
+    .sunday {
+      background-color: #d6302d; /* LightCoral */
+    }
+    .saturday {
+      background-color: #f21b08; /* LightBlue */
+    }
+    .task {
+      padding: 5px;
+      margin-top: 5px;
+      overflow: hidden; /* Prevents overflow of tasks */
+    }
+    .professional { background-color: rgb(22, 209, 246); }
+    .personal { background-color: green; }
+    .rest { background-color: yellow; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="text-center"> Task Calendar </h1>
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-8">
+        <div class="row">
+          <div class="col-1 sunday text-center">Sun</div>
+          <div class="col-2 weekday text-center">Mon</div>
+          <div class="col-2 weekday text-center">Tue</div>
+          <div class="col-2 weekday text-center">Wed</div>
+          <div class="col-2 weekday text-center">Thu</div>
+          <div class="col-2 weekday text-center">Fri</div>
+          <div class="col-1 saturday text-center">Sat</div>
+        </div>
+        <div class="row">
+          <!-- Days 1-7 -->
+          <div class="col-1 day text-center" id="day1">1</div>
+          <div class="col-2 day text-center" id="day2">2</div>
+          <div class="col-2 day text-center" id="day3">3</div>
+          <div class="col-2 day text-center" id="day4">4</div>
+          <div class="col-2 day text-center" id="day5">5</div>
+          <div class="col-2 day text-center" id="day6">6</div>
+          <div class="col-1 day text-center" id="day7">7</div>
+        </div>
+        <div class="row">
+          <!-- Days 8-14 -->
+          <div class="col-1 day text-center" id="day8">8</div>
+          <div class="col-2 day text-center" id="day9">9</div>
+          <div class="col-2 day text-center" id="day10">10</div>
+          <div class="col-2 day text-center" id="day11">11</div>
+          <div class="col-2 day text-center" id="day12">12</div>
+          <div class="col-2 day text-center" id="day13">13</div>
+          <div class="col-1 day text-center" id="day14">14</div>
+        </div>
+        <!-- Add more rows for the rest of the days -->
+        <div class="row">
+          <!-- Days 15-21 -->
+          <div class="col-1 day text-center" id="day15">15</div>
+          <div class="col-2 day text-center" id="day16">16</div>
+          <div class="col-2 day text-center" id="day17">17</div>
+          <div class="col-2 day text-center" id="day18">18</div>
+          <div class="col-2 day text-center" id="day19">19</div>
+          <div class="col-2 day text-center" id="day20">20</div>
+          <div class="col-1 day text-center" id="day21">21</div>
+        </div>
+        <div class="row">
+          <!-- Days 22-28 -->
+          <div class="col-1 day text-center" id="day22">22</div>
+          <div class="col-2 day text-center" id="day23">23</div>
+          <div class="col-2 day text-center" id="day24">24</div>
+          <div class="col-2 day text-center" id="day25">25</div>
+          <div class="col-2 day text-center" id="day26">26</div>
+          <div class="col-2 day text-center" id="day27">27</div>
+          <div class="col-1 day text-center" id="day28">28</div>
+        </div>
+      </div>
+      <div class="col-md-2"></div>
+    </div>
+  </div>
+
+  <!-- Scheduling Section -->
+  <div class="container mt-5">
+    <h2 class="text-center">Task Scheduling</h2>
+    <form id="taskForm">
+      <div class="form-group">
+        <label for="taskName">Task Name:</label>
+        <input type="text" class="form-control" id="taskName" placeholder="Enter task name" required>
+      </div>
+      <div class="form-group">
+        <label for="duration">Duration (in hours):</label>
+        <input type="number" class="form-control" id="duration" placeholder="Enter task duration" required>
+      </div>
+      <div class="form-group">
+        <label for="category">Category:</label>
+        <select class="form-control" id="category" required>
+          <option value="professional">Professional</option>
+          <option value="personal">Personal</option>
+          <option value="rest">Rest</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="preferredDays">Preferred Days:</label>
+        <select class="form-control" id="preferredDays" required>
+          <option value="both">Both</option>
+          <option value="weekdays">weekdays</option>
+          <option value="weekends">weekends</option>
+
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="preferredTime">Preferred Time:</label>
+        <input type="time" class="form-control" id="preferredTime" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Schedule Task</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('taskForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const taskName = document.getElementById('taskName').value;
+      const duration = document.getElementById('duration').value;
+      const category = document.getElementById('category').value;
+      const preferredDays = document.getElementById('preferredDays').value;
+      const preferredTime = document.getElementById('preferredTime').value;
+
+      // Find the appropriate day cells and add the task
+      const days = document.querySelectorAll('.day');
+      days.forEach(function(day) {
+        if (preferredDays === 'weekdays' && !day.classList.contains('sunday') && !day.classList.contains('saturday')) {
+          const task = document.createElement('div');
+          task.classList.add('task', 'text-center', 'border', category);
+          task.style.height = `${parseInt(duration) * 20}px`; // Adjust height based on duration
+          task.innerHTML = `<strong>${taskName}</strong><br>${duration} hours`;
+          day.appendChild(task);
+        } else if (preferredDays === 'weekends' && (day.classList.contains('sunday') || day.classList.contains('saturday'))) {
+          const task = document.createElement('div');
+          task.classList.add('task', 'text-center', 'border', category);
+          task.style.height = `${parseInt(duration) * 20}px`; // Adjust height based on duration
+          task.innerHTML = `<strong>${taskName}</strong><br>${duration} hours`;
+          day.appendChild(task);
+        } else if (preferredDays === 'both') {
+          const task = document.createElement('div');
+          task.classList.add('task', 'text-center', 'border', category);
+          task.style.height = `${parseInt(duration) * 20}px`; // Adjust height based on duration
+          task.innerHTML = `<strong>${taskName}</strong><br>${duration} hours`;
+          day.appendChild(task);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
